@@ -1,10 +1,21 @@
 use serde::Deserialize;
 
-use crate::{player::PlayerData};
+use crate::player::PlayerData;
 
 #[derive(Deserialize, Debug)]
 struct Player {
-    Character: Box<p_character> 
+    Character: Box<p_character>,
+    Achievements: Box<p_achievements>
+}
+
+#[derive(Deserialize, Debug)]
+struct p_achievements {
+    List: Vec<ListElement>
+}
+
+#[derive(Deserialize, Debug)]
+struct ListElement {
+    ID: i32
 }
 
 #[derive(Deserialize, Debug)]
@@ -29,7 +40,7 @@ struct p_character {
 
 pub async fn fetch_data(id: &str, P_DATA: &mut PlayerData) -> Result<(), Box<dyn std::error::Error>> {
     println!("STARTING TO FETCH");
-    let p_data = reqwest::get("https://xivapi.com/character/".to_owned() + id)
+    let p_data = reqwest::get("https://xivapi.com/character/".to_owned() + id + "?data=AC")
         .await?
         .json::<Player>()
         .await?;
@@ -40,6 +51,9 @@ pub async fn fetch_data(id: &str, P_DATA: &mut PlayerData) -> Result<(), Box<dyn
     P_DATA.datacenter = p_data.Character.DC;
     P_DATA.level = p_data.Character.ActiveClassJob.Level;
     P_DATA.class = p_data.Character.ActiveClassJob.UnlockedState.Name;
+    for i in p_data.Achievements.List.iter() {
+        P_DATA.achievements.push(i.ID)
+    }
 
     Ok(())
 }

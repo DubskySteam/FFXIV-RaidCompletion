@@ -4,5 +4,5 @@ pub struct PlayerData {
     pub class: String,
     pub datacenter: String,
     pub server: String,
-    pub achievements: Vec<String>
+    pub achievements: Vec<i32>
 }
