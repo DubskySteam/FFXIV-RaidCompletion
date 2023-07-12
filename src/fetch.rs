@@ -6,7 +6,18 @@ struct Player {
 }
 
 #[derive(Deserialize, Debug)]
+struct ActiveClassJob {
+   UnlockedState: Box<UnlockedState> 
+}
+
+#[derive(Deserialize, Debug)]
+struct UnlockedState {
+    Name: String
+}
+
+#[derive(Deserialize, Debug)]
 struct p_character {
+    ActiveClassJob: Box<ActiveClassJob>,
     DC: String,
     Name: String,
     Server: String,
