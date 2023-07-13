@@ -1,5 +1,4 @@
 use serde::Deserialize;
-
 use crate::player::PlayerData;
 
 #[derive(Deserialize, Debug)]
