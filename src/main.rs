@@ -7,11 +7,17 @@ mod player;
 mod fetch;
 mod ui;
 use player::PlayerData;
+use tokio::task;
+use tokio::sync::mpsc;
+use tokio::time::Duration;
+use tokio::time::sleep;
 use std::env;
-
 
 #[tokio::main]
 async fn main() {
+    //Channel for msg's between gui && api threads
+    let (tx, mut rx) = mpsc::channel::<PlayerData>(100);
+
     let mut P_ID: String = "48486396".to_owned();
     //Until UI is finished
     let args: Vec<String> = env::args().collect();
@@ -22,26 +28,36 @@ async fn main() {
     }
 
     //Initial player data
-    let mut P_DATA: PlayerData = PlayerData {
-        name: String::new(),
-        level: 0,
-        class: String::new(),
-        datacenter: String::new(),
-        server: String::new(),
-        achievements: Vec::new()
-    };
-    
-    //fetch data from api and do provisional print
-    let _ = fetch::fetch_data(&P_ID, &mut P_DATA).await;
-    println!("Char: {}\nLevel: {}\nClass: {}\nDC: {}\nServer: {}\nAchievements: {:?}",
-             P_DATA.name,
-             P_DATA.level,
-             P_DATA.class,
-             P_DATA.datacenter,
-             P_DATA.server,
-             P_DATA.achievements
-            );
+    let mut P_DATA: PlayerData = PlayerData::new();
 
-    //For now we create the ui after we fetched the data
+    //API Thread
+    tokio::spawn(async move {
+        loop {
+            match fetch::fetch_data(&P_ID, &mut P_DATA).await {
+                Ok(reponse) => {
+                    if tx.send(reponse).await.is_err() {
+                        eprintln!("Error communicating with gui");
+                        break;
+                    }
+                },
+                Err(e) => {
+                    eprintln!("Error while executing api calls! {}", e);
+                }
+            }
+            //Fetch every 60 seconds 
+            sleep(Duration::from_secs(60));
+            println!("Re-fetching");
+        }
+    });
+
+    //Spawn UI
     let gui = ui::create_ui();
+    println!("UI CREATED");
+
+    //Update loop for the GUI
+    loop {
+        while let Some(response) = rx.recv().await {
+            ui::update(P_DATA);
+        }
+    }
 }
