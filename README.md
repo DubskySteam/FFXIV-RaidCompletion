@@ -6,5 +6,16 @@
 ___
 [![](https://img.shields.io/badge/Download%20latest-v0.4-blue?style=for-the-badge&logo=)](https://github.com/DubskySteam/FFXIV-RaidCompletion/releases/)
 ## Features [WIP]
+- Overview of your character
 - Show progression of pve content
+## How to use
+1. Make your achievements public (lodestone -> character settings)
+'''This can take up to 30 minutes to take effect.'''
+2. Open the application and enter your character id (can be found in the lodestone url of your char)
+3. Done
+## Report bugs
+If you find any kind of bug, please open an issue (at this repo) with the following details:
+1. OS
+2. What exactly did/not happen
+3. Can you re-produce it 
 ## Screenshots [WIP]
