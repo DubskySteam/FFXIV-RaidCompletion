@@ -27,13 +27,10 @@ async fn main() {
         P_ID = args[1].clone();
     }
 
-    //Initial player data
-    let mut P_DATA: PlayerData = PlayerData::new();
-
     //API Thread
     tokio::spawn(async move {
         loop {
-            match fetch::fetch_data(&P_ID, &mut P_DATA).await {
+            match fetch::fetch_data(&P_ID).await {
                 Ok(reponse) => {
                     if tx.send(reponse).await.is_err() {
                         eprintln!("Error communicating with gui");
@@ -45,7 +42,7 @@ async fn main() {
                 }
             }
             //Fetch every 60 seconds 
-            sleep(Duration::from_secs(60));
+            sleep(Duration::from_secs(60)).await;
             println!("Re-fetching");
         }
     });
@@ -56,8 +53,10 @@ async fn main() {
 
     //Update loop for the GUI
     loop {
+        println!("[GUI] CHECKING UPDATE");
         while let Some(response) = rx.recv().await {
-            ui::update(P_DATA);
+            println!("[GUI] TRYING TO UPDATE");
+            ui::update(&response);
         }
     }
 }

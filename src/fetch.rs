@@ -37,13 +37,44 @@ struct p_character {
     Title: i32
 }
 
-pub async fn fetch_data(id: &str, P_DATA: &mut PlayerData) -> Result<(), Box<dyn std::error::Error>> {
-    println!("STARTING TO FETCH");
-    let p_data = reqwest::get("https://xivapi.com/character/".to_owned() + id + "?data=AC")
-        .await?
-        .json::<Player>()
-        .await?;
+#[derive(Debug)]
+pub struct ApiError {
+    message: String,
+}
 
+impl std::fmt::Display for ApiError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
+impl std::error::Error for ApiError {}
+
+impl ApiError {
+    fn new(message: &str) -> Self {
+        ApiError {
+            message: message.to_owned(),
+        }
+    }
+}
+
+impl From<Box<dyn std::error::Error>> for ApiError {
+    fn from(error: Box<dyn std::error::Error>) -> Self {
+        Self { message: error.to_string() }
+    }
+}
+
+pub async fn fetch_data(id: &str) -> Result<PlayerData, ApiError> {
+    println!("STARTING TO FETCH");
+    let p_data = reqwest::get(format!("https://xivapi.com/character/{}?data=AC", id))
+        .await
+        .map_err(|err| ApiError::new(&format!("{}", err)))?
+        .json::<Player>()
+        .await
+        .map_err(|err| ApiError::new(&format!("{}", err)))?;
+    println!("DONE FETCHING");
+
+    let mut P_DATA: PlayerData = PlayerData::new();
     //println!("pdata:\n{:?}", p_data);
     P_DATA.name = p_data.Character.Name;
     P_DATA.server = p_data.Character.Server;
@@ -54,5 +85,5 @@ pub async fn fetch_data(id: &str, P_DATA: &mut PlayerData) -> Result<(), Box<dyn
         P_DATA.achievements.push(i.ID)
     }
 
-    Ok(())
+    Ok(P_DATA)
 }
