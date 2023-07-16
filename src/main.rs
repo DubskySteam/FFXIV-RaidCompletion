@@ -47,16 +47,17 @@ async fn main() {
         }
     });
 
-    //Spawn UI
-    let gui = ui::create_ui();
-    println!("UI CREATED");
-
-    //Update loop for the GUI
-    loop {
-        println!("[GUI] CHECKING UPDATE");
+    //GUI Update task
+    let update_task = tokio::spawn(async move {
         while let Some(response) = rx.recv().await {
             println!("[GUI] TRYING TO UPDATE");
             ui::update(&response);
         }
-    }
+    });
+
+    //Spawn GUI
+    ui::create_ui();
+
+    //GUI terminate await
+    let _ = update_task.await;
 }
