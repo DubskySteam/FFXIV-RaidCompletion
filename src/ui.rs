@@ -31,12 +31,7 @@ pub fn update(new_data: &PlayerData) {
         P_DATA.datacenter = new_data.datacenter.clone();
         P_DATA.achievements = new_data.achievements.clone();
         println!("UPDATED DATA");
-        println!("Char: {}\nLevel: {}\nClass: {}\nDC: {}\nServer: {}\nAchievements: {:?}",
-                 P_DATA.name,
-                 P_DATA.level,
-                 P_DATA.class,
-                 P_DATA.datacenter,
-                 P_DATA.server,
+        println!("Achievement Array: {:?}",
                  P_DATA.achievements
                 );
     }
@@ -46,14 +41,23 @@ fn App(cx: Scope) -> Element {
     unsafe {
         cx.render(rsx! {
             div {
+                h1 {"FFXIV - Raid Completion Tracker"}
+                h2 {"Overview"}
                 ul {
                     li {"{P_DATA.name}"}
                     li {"{P_DATA.class}"}
                     li {"{P_DATA.level}"}
                     li {"{P_DATA.server}"}
                 }
+                button {"Dungeons"}
+                button {"Trials"}
+                button {"Raids"}
                 button {
-                    onclick: move |event| println!("Trying to refresh the data...")
+                    onclick: |_| async move {
+                        println!("Quitting the application");
+                        std::process::exit(0);
+                    },
+                    "Exit"
                 }
             }
         })
