@@ -41,18 +41,22 @@ fn App(cx: Scope) -> Element {
     unsafe {
         cx.render(rsx! {
             style { include_str!("css/main.css") }
-            div {
-                h1 {"FFXIV - Raid Completion Tracker"}
-                h2 {"Overview"}
-                ul {
-                    li {"{P_DATA.name}"}
-                    li {"{P_DATA.class}"}
-                    li {"{P_DATA.level}"}
-                    li {"{P_DATA.server}"}
+            div { class: "container",
+            h1 {class:"title", "FFXIV - Raid Completion Tracker"}
+
+                div { class: "cards",
+                    div {class:"card",
+                        h2 {class:"username", "{P_DATA.name}"}
+                        p {class:"level", "Lv. {P_DATA.level}"}
+                        p {class:"class", "{P_DATA.class}"}
+                    }
+                    div {class:"card",
+                    h2 {class:"username", "Datacenter"}
+                        p {class:"level", "{P_DATA.datacenter}"}
+                            p {class:"class", "{P_DATA.server}"}
+                    }
                 }
-                button {"Dungeons"}
-                button {"Trials"}
-                button {"Raids"}
+
                 button {
                     onclick: |_| async move {
                         println!("Quitting the application");
