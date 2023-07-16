@@ -40,6 +40,7 @@ pub fn update(new_data: &PlayerData) {
 fn App(cx: Scope) -> Element {
     unsafe {
         cx.render(rsx! {
+            style { include_str!("css/main.css") }
             div {
                 h1 {"FFXIV - Raid Completion Tracker"}
                 h2 {"Overview"}
