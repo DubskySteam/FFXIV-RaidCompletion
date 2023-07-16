@@ -43,16 +43,19 @@ pub fn update(new_data: &PlayerData) {
 }
 
 fn App(cx: Scope) -> Element {
-    cx.render(rsx! {
-        div {
-            ul {
-                li {"Shiva (Extreme)"}
-                li {"Whorleater (Extreme)"}
-                li {"Biggus (Extreme)"}
+    unsafe {
+        cx.render(rsx! {
+            div {
+                ul {
+                    li {"{P_DATA.name}"}
+                    li {"{P_DATA.class}"}
+                    li {"{P_DATA.level}"}
+                    li {"{P_DATA.server}"}
+                }
+                button {
+                    onclick: move |event| println!("Trying to refresh the data...")
+                }
             }
-            button {
-                onclick: move |event| println!("Trying to refresh the data...")
-            }
-        }
-    })
+        })
+    }
 }
