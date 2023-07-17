@@ -1,7 +1,8 @@
 #![allow(unused_variables)]
-use dioxus::{prelude::*, html::{ul, button}};
+use dioxus::{prelude::*, html::{ul, button, br}};
 use dioxus_desktop::*;
 
+use crate::content::{self, achievements};
 use crate::player::PlayerData;
 
 static mut P_DATA: PlayerData = PlayerData {
@@ -12,6 +13,12 @@ static mut P_DATA: PlayerData = PlayerData {
             server: String::new(),
             achievements: Vec::new()
         };
+
+static mut P_ACHIEVEMENTS: achievements = achievements {
+    name: Vec::new(),
+    id: Vec::new(),
+    status: Vec::new()
+};
 
 pub fn create_ui() {
     dioxus_desktop::launch_cfg(
@@ -24,6 +31,9 @@ pub fn create_ui() {
 
 pub fn update(new_data: &PlayerData) {
     unsafe {
+        if P_ACHIEVEMENTS.status.len() <= 1 {
+            P_ACHIEVEMENTS = achievements::populateTrials();
+        }
         P_DATA.name = new_data.name.clone();
         P_DATA.level = new_data.level.clone();
         P_DATA.class = new_data.class.clone();
@@ -31,29 +41,57 @@ pub fn update(new_data: &PlayerData) {
         P_DATA.datacenter = new_data.datacenter.clone();
         P_DATA.achievements = new_data.achievements.clone();
         println!("UPDATED DATA");
-        println!("Char: {}\nLevel: {}\nClass: {}\nDC: {}\nServer: {}\nAchievements: {:?}",
-                 P_DATA.name,
-                 P_DATA.level,
-                 P_DATA.class,
-                 P_DATA.datacenter,
-                 P_DATA.server,
+        println!("Achievement Array: {:?}",
                  P_DATA.achievements
                 );
+        for id in 0..P_ACHIEVEMENTS.id.len() {
+            if P_DATA.achievements.contains(&P_ACHIEVEMENTS.id[id]) {
+               P_ACHIEVEMENTS.status[id] = true;
+            }
+        }
     }
 }
 
 fn App(cx: Scope) -> Element {
     unsafe {
         cx.render(rsx! {
-            div {
-                ul {
-                    li {"{P_DATA.name}"}
-                    li {"{P_DATA.class}"}
-                    li {"{P_DATA.level}"}
-                    li {"{P_DATA.server}"}
+            style { include_str!("css/main.css") }
+            div { class: "container",
+            h1 {class:"title", "FFXIV - Raid Completion Tracker"}
+
+                div { class: "cards",
+                    div {class:"card",
+                        h2 {class:"username", "{P_DATA.name}"}
+                        p {class:"level", "Lv. {P_DATA.level}"}
+                        p {class:"class", "{P_DATA.class}"}
+                    }
+                    div {class:"card",
+                        h2 {class:"username", "Datacenter"}
+                        p {class:"level", "{P_DATA.datacenter}"}
+                        p {class:"class", "{P_DATA.server}"}
+                    }
                 }
+
+                div {class:"seperator"}
+
+                div {class:"tabs",
+                    div {class:"tab", "Dungeons"}
+                    div {class:"tab", "Trial"}
+                    div {class:"tab", "Raid"}
+                }
+
+                div {class:"labels",
+                for x in 0..P_ACHIEVEMENTS.name.len() {
+                    p {class:"label_{P_ACHIEVEMENTS.status[x]}", "{P_ACHIEVEMENTS.name[x]}"}
+                }
+                }
+
                 button {
-                    onclick: move |event| println!("Trying to refresh the data...")
+                    onclick: |_| async move {
+                        println!("Quitting the application");
+                        std::process::exit(0);
+                    },
+                    "Exit"
                 }
             }
         })

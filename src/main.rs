@@ -6,20 +6,20 @@
 mod player;
 mod fetch;
 mod ui;
+mod content;
+use std::env;
 use player::PlayerData;
 use tokio::task;
 use tokio::sync::mpsc;
-use tokio::time::Duration;
-use tokio::time::sleep;
-use std::env;
+use tokio::time::{Duration, sleep};
 
 #[tokio::main]
 async fn main() {
     //Channel for msg's between gui && api threads
     let (tx, mut rx) = mpsc::channel::<PlayerData>(100);
 
-    let mut P_ID: String = "48486396".to_owned();
     //Until UI is finished
+    let mut P_ID: String = "48486396".to_owned();
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
         println!("Too many or no arguments given. Using default char_id")
