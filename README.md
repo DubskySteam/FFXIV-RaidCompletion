@@ -19,3 +19,4 @@ If you find any kind of bug, please open an issue (at this repo) with the follow
 2. What exactly did/not happen
 3. Can you re-produce it 
 ## Screenshots [WIP]
+![](media/readme_screen1.png)
