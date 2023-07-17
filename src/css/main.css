@@ -10,7 +10,7 @@ body {
 }
 
 .container {
-  width: 600px;
+  width: 90%;
   text-align: center;
 }
 
@@ -23,6 +23,7 @@ body {
 .cards {
   display: flex;
   justify-content: space-between;
+  padding-bottom: 20px;
 }
 
 .card {
