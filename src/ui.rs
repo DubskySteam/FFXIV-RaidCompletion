@@ -57,6 +57,14 @@ fn App(cx: Scope) -> Element {
                     }
                 }
 
+                div {class:"seperator"}
+
+                div {class:"tabs",
+                    div {class:"tab", "Dungeons"}
+                    div {class:"tab", "Trial"}
+                    div {class:"tab", "Raid"}
+                }
+
                 button {
                     onclick: |_| async move {
                         println!("Quitting the application");
