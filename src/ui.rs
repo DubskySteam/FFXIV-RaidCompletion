@@ -1,7 +1,8 @@
 #![allow(unused_variables)]
-use dioxus::{prelude::*, html::{ul, button}};
+use dioxus::{prelude::*, html::{ul, button, br}};
 use dioxus_desktop::*;
 
+use crate::content::{getDungeons, getTrials, self};
 use crate::player::PlayerData;
 
 static mut P_DATA: PlayerData = PlayerData {
@@ -39,6 +40,7 @@ pub fn update(new_data: &PlayerData) {
 
 fn App(cx: Scope) -> Element {
     unsafe {
+        let trials = content::getTrials();
         cx.render(rsx! {
             style { include_str!("css/main.css") }
             div { class: "container",
@@ -51,9 +53,9 @@ fn App(cx: Scope) -> Element {
                         p {class:"class", "{P_DATA.class}"}
                     }
                     div {class:"card",
-                    h2 {class:"username", "Datacenter"}
+                        h2 {class:"username", "Datacenter"}
                         p {class:"level", "{P_DATA.datacenter}"}
-                            p {class:"class", "{P_DATA.server}"}
+                        p {class:"class", "{P_DATA.server}"}
                     }
                 }
 
@@ -63,6 +65,12 @@ fn App(cx: Scope) -> Element {
                     div {class:"tab", "Dungeons"}
                     div {class:"tab", "Trial"}
                     div {class:"tab", "Raid"}
+                }
+
+                div {class:"labels",
+                for x in 0..trials.len() {
+                    p {class:"label", "{trials[x]}"}
+                }
                 }
 
                 button {

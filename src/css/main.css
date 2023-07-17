@@ -23,7 +23,6 @@ body {
 .cards {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .card {
@@ -32,6 +31,7 @@ body {
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   padding: 20px;
   width: 250px;
+  text-align: center;
 }
 
 .username {
@@ -54,7 +54,6 @@ body {
 .tabs {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .tab {
@@ -71,11 +70,16 @@ body {
 
 .labels {
   display: flex;
+  flex-direction: row;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .label {
   color: #ffffff;
   font-size: 18px;
+  min-width: calc(50% - 10px);
+  text-align: center;
+  margin-bottom: 10px;
 }
 

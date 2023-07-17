@@ -6,6 +6,7 @@
 mod player;
 mod fetch;
 mod ui;
+mod content;
 use std::env;
 use player::PlayerData;
 use tokio::task;
