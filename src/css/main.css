@@ -75,11 +75,18 @@ body {
   flex-wrap: wrap;
 }
 
-.label {
-  color: #ffffff;
+.label_true {
+  color: green;
   font-size: 18px;
   min-width: calc(50% - 10px);
   text-align: center;
   margin-bottom: 10px;
 }
 
+.label_false {
+  color: red;
+  font-size: 18px;
+  min-width: calc(50% - 10px);
+  text-align: center;
+  margin-bottom: 10px;
+}

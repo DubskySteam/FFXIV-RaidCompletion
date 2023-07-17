@@ -2,7 +2,7 @@
 use dioxus::{prelude::*, html::{ul, button, br}};
 use dioxus_desktop::*;
 
-use crate::content::{getDungeons, getTrials, self};
+use crate::content::{self, achievements};
 use crate::player::PlayerData;
 
 static mut P_DATA: PlayerData = PlayerData {
@@ -13,6 +13,12 @@ static mut P_DATA: PlayerData = PlayerData {
             server: String::new(),
             achievements: Vec::new()
         };
+
+static mut P_ACHIEVEMENTS: achievements = achievements {
+    name: Vec::new(),
+    id: Vec::new(),
+    status: Vec::new()
+};
 
 pub fn create_ui() {
     dioxus_desktop::launch_cfg(
@@ -25,6 +31,9 @@ pub fn create_ui() {
 
 pub fn update(new_data: &PlayerData) {
     unsafe {
+        if P_ACHIEVEMENTS.status.len() <= 1 {
+            P_ACHIEVEMENTS = achievements::populateTrials();
+        }
         P_DATA.name = new_data.name.clone();
         P_DATA.level = new_data.level.clone();
         P_DATA.class = new_data.class.clone();
@@ -35,12 +44,16 @@ pub fn update(new_data: &PlayerData) {
         println!("Achievement Array: {:?}",
                  P_DATA.achievements
                 );
+        for id in 0..P_ACHIEVEMENTS.id.len() {
+            if P_DATA.achievements.contains(&P_ACHIEVEMENTS.id[id]) {
+               P_ACHIEVEMENTS.status[id] = true;
+            }
+        }
     }
 }
 
 fn App(cx: Scope) -> Element {
     unsafe {
-        let trials = content::getTrials();
         cx.render(rsx! {
             style { include_str!("css/main.css") }
             div { class: "container",
@@ -68,8 +81,8 @@ fn App(cx: Scope) -> Element {
                 }
 
                 div {class:"labels",
-                for x in 0..trials.len() {
-                    p {class:"label", "{trials[x]}"}
+                for x in 0..P_ACHIEVEMENTS.name.len() {
+                    p {class:"label_{P_ACHIEVEMENTS.status[x]}", "{P_ACHIEVEMENTS.name[x]}"}
                 }
                 }
 
