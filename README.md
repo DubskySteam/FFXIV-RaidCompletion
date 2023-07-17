@@ -10,9 +10,9 @@ ___
 - Show progression of pve content
 ## How to use
 1. Make your achievements public (lodestone -> character settings)
-'''This can take up to 30 minutes to take effect.'''
-2. Open the application and enter your character id (can be found in the lodestone url of your char)
-3. Done
+```This can take up to 30 minutes to take effect.```
+3. Open the application per console and enter your character id as 1st argument (can be found in the lodestone url of your char)
+4. Done
 ## Report bugs
 If you find any kind of bug, please open an issue (at this repo) with the following details:
 1. OS
