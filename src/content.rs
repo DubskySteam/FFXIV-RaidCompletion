@@ -38,7 +38,7 @@ impl Achievements {
     pub fn getRaids() -> Self {
         Achievements {
             name: vec![
-                "Howling Eye".to_owned(),
+                "Binding Coils".to_owned(),
                 "Navel".to_owned(),
                 "Bowl of Embers".to_owned(),
                 "Thornmarch".to_owned(),

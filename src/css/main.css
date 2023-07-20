@@ -10,7 +10,8 @@ body {
 }
 
 .container {
-  width: 90%;
+  width: 100%;
+  max-width: 800px;
   text-align: center;
 }
 
@@ -69,6 +70,14 @@ body {
   color: #20232a;
 }
 
+.label_sep {
+    background: #20232a;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    overflow: auto;
+}
+
 .labels {
   display: flex;
   flex-direction: row;
@@ -82,6 +91,7 @@ body {
   min-width: calc(50% - 10px);
   text-align: center;
   margin-bottom: 10px;
+  overflow-wrap: break-word;
 }
 
 .label_false {
@@ -90,4 +100,5 @@ body {
   min-width: calc(50% - 10px);
   text-align: center;
   margin-bottom: 10px;
+  overflow-wrap: break-word;
 }

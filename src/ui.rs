@@ -33,7 +33,7 @@ pub fn create_ui() {
     dioxus_desktop::launch_cfg(
         App,
         Config::default().with_window(WindowBuilder::new()
-                                      .with_resizable(false)
+                                      .with_resizable(true)
                                       .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(1080, 720)))
         );
 }
@@ -115,7 +115,7 @@ fn App(cx: Scope) -> Element {
             cx.render(rsx! {
                 style { include_str!("css/main.css") }
                 div { class: "container",
-                h1 {class:"title", "{tab_state}FFXIV - Raid Completion Tracker"}
+                h1 {class:"title", "FFXIV - Raid Completion Tracker"}
 
                     div { class: "cards",
                     div {class:"card",
@@ -144,7 +144,9 @@ fn App(cx: Scope) -> Element {
                         }, "Raid"}
                         }
 
-                        c_dungeon{}
+                        div {class:"label_sep", 
+                            c_dungeon{}
+                        }
 
                         button {
                             onclick: |_| async move {
@@ -159,7 +161,7 @@ fn App(cx: Scope) -> Element {
             cx.render(rsx! {
                 style { include_str!("css/main.css") }
                 div { class: "container",
-                h1 {class:"title", "{tab_state}FFXIV - Raid Completion Tracker"}
+                h1 {class:"title", "FFXIV - Raid Completion Tracker"}
 
                     div { class: "cards",
                     div {class:"card",
@@ -189,7 +191,9 @@ fn App(cx: Scope) -> Element {
                         }, "Raid"}
                         }
 
-                        c_trial{}
+                        div {class:"label_sep", 
+                            c_trial{}
+                        }
 
                         button {
                             onclick: |_| async move {
@@ -235,7 +239,9 @@ fn App(cx: Scope) -> Element {
                         }, "Raid"}
                         }
 
-                        c_raid{}
+                        div {class:"label_sep", 
+                            c_raid{}
+                        }
 
                         button {
                             onclick: |_| async move {
