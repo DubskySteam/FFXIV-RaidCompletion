@@ -51,7 +51,7 @@ async fn main() {
     let update_task = tokio::spawn(async move {
         while let Some(response) = rx.recv().await {
             println!("[GUI] TRYING TO UPDATE");
-            ui::update(&response);
+            ui::update(response);
         }
     });
 
