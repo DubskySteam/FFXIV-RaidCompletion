@@ -10,8 +10,7 @@ body {
 }
 
 .container {
-  width: 100%;
-  max-width: 800px;
+  width: 90%;
   text-align: center;
 }
 
@@ -33,6 +32,8 @@ body {
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   padding: 20px;
   width: 250px;
+  margin-left: 10px;
+  margin-right: 10px;
   text-align: center;
 }
 
