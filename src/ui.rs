@@ -1,5 +1,5 @@
 #![allow(unused_variables)]
-use dioxus::{prelude::*, html::{ul, button, br, h1}};
+use dioxus::{prelude::*, html::{ul, button, br, h1, table, th, tr}};
 use dioxus_desktop::*;
 
 use crate::content::{self, Achievements};
@@ -75,11 +75,35 @@ pub fn update(new_data: &PlayerData) {
 }
 
 fn c_dungeon(cx: Scope) -> Element {
+    let mut page = use_state(cx,|| 0);
     unsafe {
         cx.render(rsx!{
-            div {class:"labels",
-            for x in 0..P_ACHIEVEMENTS_DUN.name.len() {
-                p {class:"label_{P_ACHIEVEMENTS_DUN.status[x]}", "{P_ACHIEVEMENTS_DUN.name[x]}"}
+            div {class:"table-container",
+            table {
+                tr{
+                    th{"{page}Dungeon"}
+                    th{"Difficulty"}
+                    th{"Status"}
+                }
+                for x in 0..P_ACHIEVEMENTS_DUN.name.len() {
+                    tr{
+                        td{"{P_ACHIEVEMENTS_DUN.name[x]}"}
+                        td{"Extreme"}
+                        td{class:"a_{P_ACHIEVEMENTS_DUN.status[x]}","{P_ACHIEVEMENTS_DUN.status[x]}"}
+                    }
+                }   
+            }
+            button {
+                onclick: move |_| {
+                    page -= 1
+                },
+                "Previous"
+            }
+            button {
+                onclick: move |_| {
+                    page += 1
+                },
+                "Next"
             }
             }
         })
@@ -144,9 +168,7 @@ fn App(cx: Scope) -> Element {
                         }, "Raid"}
                         }
 
-                        div {class:"label_sep", 
-                            c_dungeon{}
-                        }
+                        c_dungeon{}
 
                         button {
                             onclick: |_| async move {

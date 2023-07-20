@@ -102,3 +102,60 @@ body {
   margin-bottom: 10px;
   overflow-wrap: break-word;
 }
+
+.table-container {
+  background: #20232a;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  background: #20232a;
+  border-collapse: collapse;
+  color: #ffffff;
+}
+
+th, td {
+  padding: 8px;
+  background: #20232a;
+}
+
+.a_true {
+    color: green;
+}
+
+.a_false {
+    color: red;
+}
+
+th {
+  background: #282c34;
+  color: #61dafb;
+}
+
+tr:nth-child(even) {
+  background-color: #282c34;
+}
+
+button {
+  background-color: #282c34; 
+  border: none;
+  color: #61dafb;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  padding: 10px 24px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #61dafb;
+  color: #282c34;
+}
