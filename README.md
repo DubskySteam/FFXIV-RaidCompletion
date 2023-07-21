@@ -12,7 +12,8 @@ ___
 1. Make your achievements public (lodestone -> character settings)
 '''This can take up to 90 minutes to take effect. (Up to the FFXIV Servers)'''
 2. Open the application and enter your character id (can be found in the lodestone url of your char)
-3. Done
+3. Open the application per console and enter your character id as 1st argument (can be found in the lodestone url of your char)
+4. Done
 ## Report bugs
 To report bugs please use go to "issues" and create a new ticket with the bug report template.
 The bug will have a separate issue, where further investigation or clarification will be posted.
