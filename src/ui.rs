@@ -261,9 +261,7 @@ fn App(cx: Scope) -> Element {
                         }, "Raid"}
                         }
 
-                        div {class:"label_sep", 
                             c_trial{}
-                        }
 
                         button {
                             onclick: |_| async move {
@@ -309,9 +307,7 @@ fn App(cx: Scope) -> Element {
                         }, "Raid"}
                         }
 
-                        div {class:"label_sep", 
                             c_raid{}
-                        }
 
                         button {
                             onclick: |_| async move {
