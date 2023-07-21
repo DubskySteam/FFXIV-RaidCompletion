@@ -10,13 +10,11 @@ ___
 - Show progression of pve content
 ## How to use
 1. Make your achievements public (lodestone -> character settings)
-'''This can take up to 30 minutes to take effect.'''
+'''This can take up to 90 minutes to take effect. (Up to the FFXIV Servers)'''
 2. Open the application and enter your character id (can be found in the lodestone url of your char)
 3. Done
 ## Report bugs
-If you find any kind of bug, please open an issue (at this repo) with the following details:
-1. OS
-2. What exactly did/not happen
-3. Can you re-produce it 
+To report bugs please use go to "issues" and create a new ticket with the bug report template.
+The bug will have a separate issue, where further investigation or clarification will be posted.
 ## Screenshots [WIP]
 ![](media/readme_screenshot.png)
