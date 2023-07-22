@@ -91,26 +91,28 @@ fn c_dungeon(cx: Scope) -> Element {
             table {
                 tr{
                     th{"Dungeon"}
-                    th{"Difficulty"}
                     th{"Status"}
                 }
                 for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, P_ACHIEVEMENTS_DUN.name.len()) {
                     tr{
                         td{"{P_ACHIEVEMENTS_DUN.name[x]}"}
-                        td{"Extreme"}
                         td{class:"a_{P_ACHIEVEMENTS_DUN.status[x]}","{P_ACHIEVEMENTS_DUN.status[x]}"}
                     }
                 }
             }
             button {
                 onclick: move |_| {
-                    page -= 1
+                    if *page.get() > 0 {
+                        page -= 1
+                    }
                 },
                 "Previous"
             }
             button {
                 onclick: move |_| {
-                    page += 1
+                    if *page.get() < 1 {
+                        page += 1
+                    }
                 },
                 "Next"
             }
@@ -126,26 +128,28 @@ fn c_trial(cx: Scope) -> Element {
             table {
                 tr{
                     th{"Trial"}
-                    th{"Difficulty"}
                     th{"Status"}
                 }
                 for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, P_ACHIEVEMENTS_TRIAL.name.len()) {
                     tr{
                         td{"{P_ACHIEVEMENTS_TRIAL.name[x]}"}
-                        td{"Extreme"}
                         td{class:"a_{P_ACHIEVEMENTS_TRIAL.status[x]}","{P_ACHIEVEMENTS_TRIAL.status[x]}"}
                     }
                 }   
             }
             button {
                 onclick: move |_| {
-                    page -= 1
+                    if *page.get() > 0 {
+                        page -= 1
+                    }
                 },
                 "Previous"
             }
             button {
                 onclick: move |_| {
-                    page += 1
+                    if *page.get() < 4 {
+                        page += 1
+                    }
                 },
                 "Next"
             }
@@ -161,30 +165,32 @@ fn c_raid(cx: Scope) -> Element {
             table {
                 tr{
                     th{"Raid"}
-                    th{"Difficulty"}
                     th{"Status"}
                 }
                 for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, P_ACHIEVEMENTS_RAID.name.len()) {
                     tr{
                         td{"{P_ACHIEVEMENTS_RAID.name[x]}"}
-                        td{"Extreme"}
                         td{class:"a_{P_ACHIEVEMENTS_RAID.status[x]}","{P_ACHIEVEMENTS_RAID.status[x]}"}
                     }
                 }   
             }
             button {
                 onclick: move |_| {
-                    page -= 1
+                    if *page.get() > 0 {
+                        page -= 1
+                    }
                 },
                 "Previous"
             }
             button {
                 onclick: move |_| {
-                    page += 1
+                    if *page.get() < 2 {
+                        page += 1
+                    }
                 },
                 "Next"
             }
-            }
+           }
         })
     }
 }
