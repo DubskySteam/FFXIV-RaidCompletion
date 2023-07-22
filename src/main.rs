@@ -18,14 +18,6 @@ async fn main() {
     //Channel for msg's between gui && api threads
     let (tx, mut rx) = mpsc::channel::<PlayerData>(100);
 
-    //Until UI is finished
-    let mut P_ID: String = "48486396".to_owned();
-    let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
-        println!("Too many or no arguments given. Using default char_id")
-    } else {
-        P_ID = args[1].clone();
-    }
 
     //API Thread
     tokio::spawn(async move {
