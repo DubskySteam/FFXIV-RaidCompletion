@@ -61,8 +61,8 @@ pub fn update(new_data: &PlayerData) {
         P_DATA.datacenter = new_data.datacenter.clone();
         P_DATA.achievements = new_data.achievements.clone();
         //PMD
-        println!("UPDATED DATA");
-        println!("Achievement Array: {:?}",
+        //println!("UPDATED DATA");
+        //println!("Achievement Array: {:?}",
                  P_DATA.achievements
                 );
         for id in 0..P_ACHIEVEMENTS_DUN.id.len() {
