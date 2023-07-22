@@ -1,8 +1,8 @@
 #![allow(unused_variables)]
-use dioxus::{prelude::*, html::{ul, button, br, h1, table, th, tr}};
+use dioxus::prelude::*;
 use dioxus_desktop::*;
 
-use crate::content::{self, Achievements};
+use crate::content::Achievements;
 use crate::player::PlayerData;
 
 static mut P_DATA: PlayerData = PlayerData {

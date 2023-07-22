@@ -1,23 +1,32 @@
-#![allow(dead_code)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
-#![allow(unused_imports)]
+#![windows_subsystem = "windows"]
 
 mod player;
 mod fetch;
 mod ui;
 mod content;
 use std::io::BufRead;
-use std::{env, io};
+use std::io;
 use std::fs::File;
+use std::ptr;
 use player::PlayerData;
+use winapi::um::wincon::GetConsoleWindow;
+use winapi::um::winuser::{ShowWindow, SW_HIDE};
 use regex::Regex;
-use tokio::task;
 use tokio::sync::mpsc;
 use tokio::time::{Duration, sleep};
 
 #[tokio::main]
 async fn main() {
+
+    let window = unsafe {GetConsoleWindow()};
+    if window != ptr::null_mut() {
+        unsafe {
+            ShowWindow(window, SW_HIDE);
+        }
+    }
+
     //Channel for msg's between gui && api threads
     let (tx, mut rx) = mpsc::channel::<PlayerData>(100);
 
