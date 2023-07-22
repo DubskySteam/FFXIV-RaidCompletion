@@ -41,9 +41,18 @@ pub fn create_ui() {
 pub fn update(new_data: &PlayerData) {
     unsafe {
         if P_ACHIEVEMENTS_DUN.status.len() <= 1 {
-            P_ACHIEVEMENTS_DUN = Achievements::getDungeons();
-            P_ACHIEVEMENTS_TRIAL = Achievements::getTrials();
-            P_ACHIEVEMENTS_RAID = Achievements::getRaids();
+            match Achievements::read_data("dungeons") {
+                Ok(result) => {P_ACHIEVEMENTS_DUN = result},
+                Err(e) => {eprintln!("Error >> {}", e)}
+            }
+            match Achievements::read_data("trials") {
+                Ok(result) => {P_ACHIEVEMENTS_TRIAL = result},
+                Err(e) => {eprintln!("Error >> {}", e)}
+            }
+            match Achievements::read_data("raids") {
+                Ok(result) => {P_ACHIEVEMENTS_RAID = result},
+                Err(e) => {eprintln!("Error >> {}", e)}
+            }
         }
         P_DATA.name = new_data.name.clone();
         P_DATA.level = new_data.level.clone();
