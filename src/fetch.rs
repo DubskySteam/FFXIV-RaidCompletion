@@ -34,7 +34,6 @@ struct p_character {
     DC: String,
     Name: String,
     Server: String,
-    Title: i32
 }
 
 #[derive(Debug)]
