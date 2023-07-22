@@ -12,3 +12,15 @@ dioxus-desktop = "0.3.0"
 reqwest = {version = "0.11.18", features = ["json"]}
 serde = {version = "1.0.166", features = ["derive"]} 
 tokio = { version = "1.29.1", features = ["full"]}  
+cargo-bundle = "0.6.0"
+
+[package.metadata.bundle]
+name = "FFXIV - Raid Completion"
+identifier = "dev.dubsky"
+version = "1.0.0"
+copyright = "Copyright (c) DubskySteam 2023. All rights reserved."
+category = "Game Tool"
+short_description = "FFXIV Achievement Tracker"
+long_description = """
+A fast & lightweight tool that allows you to track your endgame progress in Final Fantasy 14 Online
+"""
