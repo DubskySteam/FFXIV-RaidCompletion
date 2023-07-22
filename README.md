@@ -21,4 +21,3 @@ The bug will have a separate issue, where further investigation or clarification
 To request not implemented features please open a new issue with the corresponding template.
 ## Screenshots
 ![](media/readme_screenshot.png)
-
