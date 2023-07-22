@@ -62,9 +62,6 @@ pub fn update(new_data: &PlayerData) {
         P_DATA.achievements = new_data.achievements.clone();
         //PMD
         //println!("UPDATED DATA");
-        //println!("Achievement Array: {:?}",
-                 P_DATA.achievements
-                );
         for id in 0..P_ACHIEVEMENTS_DUN.id.len() {
             if P_DATA.achievements.contains(&P_ACHIEVEMENTS_DUN.id[id]) {
                 P_ACHIEVEMENTS_DUN.status[id] = true;
