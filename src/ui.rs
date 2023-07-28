@@ -1,4 +1,3 @@
-#![allow(unused_variables)]
 use dioxus::prelude::*;
 use dioxus_desktop::*;
 
@@ -31,7 +30,7 @@ static mut P_ACHIEVEMENTS_RAID: Achievements = Achievements {
 
 pub fn create_ui() {
     dioxus_desktop::launch_cfg(
-        App,
+        app,
         Config::default().with_window(WindowBuilder::new()
                                       .with_resizable(true)
                                       .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(1080, 820)))
@@ -192,7 +191,7 @@ fn c_raid(cx: Scope) -> Element {
     }
 }
 
-fn App(cx: Scope) -> Element {
+fn app(cx: Scope) -> Element {
     let tab_state = use_state(cx, || 0);
     unsafe {
         if *tab_state == 0 {
@@ -218,13 +217,13 @@ fn App(cx: Scope) -> Element {
 
                         div {class:"tabs",
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 0);
+                            tab_state.modify(|_| 0);
                         }, "Dungeons"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 1);
+                            tab_state.modify(|_| 1);
                         }, "Trials"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 2);
+                            tab_state.modify(|_| 2);
                         }, "Raid"}
                         }
 
@@ -263,13 +262,13 @@ fn App(cx: Scope) -> Element {
 
                         div {class:"tabs",
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 0);
+                            tab_state.modify(|_| 0);
                         }, "Dungeons"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 1);
+                            tab_state.modify(|_| 1);
                         }, "Trials"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 2);
+                            tab_state.modify(|_| 2);
                         }, "Raid"}
                         }
 
@@ -309,13 +308,13 @@ fn App(cx: Scope) -> Element {
 
                         div {class:"tabs",
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 0);
+                            tab_state.modify(|_| 0);
                         }, "Dungeons"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 1);
+                            tab_state.modify(|_| 1);
                         }, "Trials"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|val| 2);
+                            tab_state.modify(|_| 2);
                         }, "Raid"}
                         }
 

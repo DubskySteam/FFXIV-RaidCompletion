@@ -1,14 +1,16 @@
+#![allow(non_snake_case)]
+
 use serde::Deserialize;
 use crate::player::PlayerData;
 
 #[derive(Deserialize, Debug)]
 struct Player {
-    Character: Box<p_character>,
-    Achievements: Box<p_achievements>
+    Character: Box<PCharacter>,
+    Achievements: Box<PAchievements>
 }
 
 #[derive(Deserialize, Debug)]
-struct p_achievements {
+struct PAchievements {
     List: Vec<ListElement>
 }
 
@@ -29,7 +31,7 @@ struct UnlockedState {
 }
 
 #[derive(Deserialize, Debug)]
-struct p_character {
+struct PCharacter {
     ActiveClassJob: Box<ActiveClassJob>,
     DC: String,
     Name: String,
