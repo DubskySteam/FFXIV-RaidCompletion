@@ -117,11 +117,13 @@ table {
   background: #20232a;
   border-collapse: collapse;
   color: #ffffff;
+  text-align: left;
 }
 
 th, td {
   padding: 8px;
   background: #20232a;
+  font-size: 18px;
 }
 
 .a_true {
@@ -151,6 +153,7 @@ button {
   margin: 10px 2px;
   padding: 10px 24px;
   text-decoration: none;
+  font-weight: bold;
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.3s ease;
@@ -159,4 +162,21 @@ button {
 button:hover {
   background-color: #61dafb;
   color: #282c34;
+}
+
+
+.button_special {
+  background-color: red; 
+  border: none;
+  color: black;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  padding: 10px 24px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
 }

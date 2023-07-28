@@ -171,6 +171,7 @@ fn app(cx: Scope) -> Element {
                 }
 
                 button {
+                    class:"button_special",
                     onclick: |_| async move {
                         println!("Quitting the application");
                         std::process::exit(0);
