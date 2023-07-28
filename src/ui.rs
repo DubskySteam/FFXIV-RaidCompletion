@@ -85,8 +85,9 @@ fn component_achievements(cx: Scope<PureAchievement>) -> Element {
 
     if cx.props.category != *current_category.get() {
         current_category.set(cx.props.category.clone());
-        page.set(0); // reset the page count
+        page.set(0);
     }
+
     cx.render(rsx!{
         div {class:"table-container",
         table {
