@@ -66,8 +66,8 @@ pub fn create_ui() {
     dioxus_desktop::launch_cfg(
         app,
         Config::default().with_window(WindowBuilder::new()
-                                      .with_resizable(true)
-                                      .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(1080, 820)))
+                                      .with_resizable(false)
+                                      .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(700, 820)))
         );
 }
 
