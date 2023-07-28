@@ -110,7 +110,7 @@ fn component_achievements(cx: Scope<PureAchievement>) -> Element {
             }
             button {
                 onclick: move |_| {
-                    if *page.get() < 1 {
+                    if *page.get() < ((cx.props.name.len()-7)/7) {
                         page += 1
                     }
                 },
@@ -162,9 +162,9 @@ fn app(cx: Scope) -> Element {
 
                 component_achievements {
                     category: "Dungeons".to_owned(),
-                    name: achievements[1].name.clone(),
-                    id: achievements[1].id.clone(),
-                    status: achievements[1].status.clone(),
+                    name: achievements[2].name.clone(),
+                    id: achievements[2].id.clone(),
+                    status: achievements[2].status.clone(),
                 }
 
                 button {
