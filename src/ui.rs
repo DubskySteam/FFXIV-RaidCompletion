@@ -1,6 +1,3 @@
-#![allow(dead_code)]
-#![allow(unused_unsafe)]
-#![allow(unused_variables)]
 use dioxus::prelude::*;
 use dioxus_desktop::*;
 use lazy_static::lazy_static;
@@ -83,42 +80,45 @@ struct PureAchievement {
 }
 
 fn component_achievements(cx: Scope<PureAchievement>) -> Element {
-    println!("TRYING TO RENDER");
     let mut page = use_state(cx,|| 0);
-    unsafe {
-        cx.render(rsx!{
-            div {class:"table-container",
-            table {
-                tr{
-                    th{"{cx.props.category}"}
-                    th{"Status"}
-                }
-                for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, cx.props.name.len()) {
-                    tr{
-                        td{"{cx.props.name[x]}"}
-                        td{class:"a_{cx.props.status[x]}","{cx.props.status[x]}"}
-                    }
-                }
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() > 0 {
-                        page -= 1
-                    }
-                },
-                "Previous"
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() < ((cx.props.name.len()-7)/7) {
-                        page += 1
-                    }
-                },
-                "Next"
-            }
-            }
-        })
+    let current_category = use_state(cx, || cx.props.category.clone());
+
+    if cx.props.category != *current_category.get() {
+        current_category.set(cx.props.category.clone());
+        page.set(0); // reset the page count
     }
+    cx.render(rsx!{
+        div {class:"table-container",
+        table {
+            tr{
+                th{"{cx.props.category}"}
+                th{"Status"}
+            }
+            for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, cx.props.name.len()) {
+                tr{
+                    td{"{cx.props.name[x]}"}
+                    td{class:"a_{cx.props.status[x]}","{cx.props.status[x]}"}
+                }
+            }
+        }
+        button {
+            onclick: move |_| {
+                if *page.get() > 0 {
+                    page -= 1
+                }
+            },
+            "Previous"
+        }
+        button {
+            onclick: move |_| {
+                if (*page.get() + 1) * 7 < cx.props.name.len() {
+                    page += 1
+                }
+            },
+            "Next"
+        }
+        }
+    })
 }
 
 fn app(cx: Scope) -> Element {
@@ -162,9 +162,9 @@ fn app(cx: Scope) -> Element {
 
                 component_achievements {
                     category: "Dungeons".to_owned(),
-                    name: achievements[2].name.clone(),
-                    id: achievements[2].id.clone(),
-                    status: achievements[2].status.clone(),
+                    name: achievements[*tab_state.get()].name.clone(),
+                    id: achievements[*tab_state.get()].id.clone(),
+                    status: achievements[*tab_state.get()].status.clone(),
                 }
 
                 button {
