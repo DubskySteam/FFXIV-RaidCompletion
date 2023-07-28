@@ -74,7 +74,15 @@ pub fn create_ui() {
         );
 }
 
-fn component_achievements(cx: Scope, a: Achievements) -> Element {
+#[derive(PartialEq, Props)]
+struct PureAchievement {
+    category: String,
+    name: Vec<String>,
+    id: Vec<i32>,
+    status: Vec<bool>
+}
+
+fn component_achievements(cx: Scope<PureAchievement>) -> Element {
     println!("TRYING TO RENDER");
     let mut page = use_state(cx,|| 0);
     unsafe {
@@ -82,13 +90,13 @@ fn component_achievements(cx: Scope, a: Achievements) -> Element {
             div {class:"table-container",
             table {
                 tr{
-                    th{"Dungeon"}
+                    th{"{cx.props.category}"}
                     th{"Status"}
                 }
-                for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, a.name.len()) {
+                for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, cx.props.name.len()) {
                     tr{
-                        td{"{a.name[x]}"}
-                        td{class:"a_{a.status[x]}","{a.status[x]}"}
+                        td{"{cx.props.name[x]}"}
+                        td{class:"a_{cx.props.status[x]}","{cx.props.status[x]}"}
                     }
                 }
             }
@@ -152,7 +160,12 @@ fn app(cx: Scope) -> Element {
                 }, "Raid"}
                 }
 
-                component_achievements(cx, achievements[0]) {}
+                component_achievements {
+                    category: "Dungeons".to_owned(),
+                    name: achievements[1].name.clone(),
+                    id: achievements[1].id.clone(),
+                    status: achievements[1].status.clone(),
+                }
 
                 button {
                     onclick: |_| async move {
