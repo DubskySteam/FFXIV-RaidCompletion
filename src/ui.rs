@@ -1,32 +1,66 @@
 use dioxus::prelude::*;
 use dioxus_desktop::*;
-
+use lazy_static::lazy_static;
+use std::sync::{Mutex, Arc};
 use crate::content::Achievements;
-use crate::player::PlayerData;
+use crate::playerdata::PlayerData;
 
-static mut P_DATA: PlayerData = PlayerData {
-            name: String::new(),
-            level: 0,
-            class: String::new(), datacenter: String::new(),
-            server: String::new(),
-            achievements: Vec::new()
-        };
+struct PlayerDataMutex {
+    player_data: Mutex<PlayerData>,
+    player_achievements: Mutex<[Achievements; 3]>
+}
 
-static mut P_ACHIEVEMENTS_DUN: Achievements = Achievements {
-    name: Vec::new(),
-    id: Vec::new(),
-    status: Vec::new()
-};
-static mut P_ACHIEVEMENTS_TRIAL: Achievements = Achievements {
-    name: Vec::new(),
-    id: Vec::new(),
-    status: Vec::new()
-};
-static mut P_ACHIEVEMENTS_RAID: Achievements = Achievements {
-    name: Vec::new(),
-    id: Vec::new(),
-    status: Vec::new()
-};
+impl PlayerDataMutex {
+    fn new() -> Self {
+        Self {
+            player_data: Mutex::new(PlayerData::new()),
+            player_achievements: Mutex::new([
+                Achievements::new(),
+                Achievements::new(),
+                Achievements::new()
+            ])
+        }
+    }
+}
+
+lazy_static! {
+    static ref PDM: Arc<PlayerDataMutex> = Arc::new(PlayerDataMutex::new());
+}
+
+pub fn update(new_data: &PlayerData) {
+    if PDM.player_achievements.lock().unwrap()[0].status.len() <= 1 {
+        match Achievements::read_data("dungeons") {
+            Ok(result) => PDM.player_achievements.lock().unwrap()[0] = result,
+            Err(e) => eprintln!("Error >> {}", e),
+        }
+        match Achievements::read_data("trials") {
+            Ok(result) => PDM.player_achievements.lock().unwrap()[1] = result,
+            Err(e) => eprintln!("Error >> {}", e),
+        }
+        match Achievements::read_data("raids") {
+            Ok(result) => PDM.player_achievements.lock().unwrap()[2] = result,
+            Err(e) => eprintln!("Error >> {}", e),
+        }
+    }
+    PDM.player_data.lock().unwrap().name = new_data.name.clone();
+    PDM.player_data.lock().unwrap().level = new_data.level;
+    PDM.player_data.lock().unwrap().class = new_data.class.clone();
+    PDM.player_data.lock().unwrap().server = new_data.server.clone();
+    PDM.player_data.lock().unwrap().datacenter = new_data.datacenter.clone();
+    PDM.player_data.lock().unwrap().achievements = new_data.achievements.clone();
+
+    update_status(&mut PDM.player_achievements.lock().unwrap()[0], &PDM.player_data.lock().unwrap());
+    update_status(&mut PDM.player_achievements.lock().unwrap()[1], &PDM.player_data.lock().unwrap());
+    update_status(&mut PDM.player_achievements.lock().unwrap()[2], &PDM.player_data.lock().unwrap());
+}
+
+fn update_status(achievements: &mut Achievements, player_data: &PlayerData) {
+    for id in 0..achievements.id.len() {
+        if player_data.achievements.contains(&achievements.id[id]) {
+            achievements.status[id] = true;
+        }
+    }
+}
 
 pub fn create_ui() {
     dioxus_desktop::launch_cfg(
@@ -37,299 +71,112 @@ pub fn create_ui() {
         );
 }
 
-pub fn update(new_data: &PlayerData) {
-    unsafe {
-        if P_ACHIEVEMENTS_DUN.status.len() <= 1 {
-            match Achievements::read_data("dungeons") {
-                Ok(result) => {P_ACHIEVEMENTS_DUN = result},
-                Err(e) => {eprintln!("Error >> {}", e)}
-            }
-            match Achievements::read_data("trials") {
-                Ok(result) => {P_ACHIEVEMENTS_TRIAL = result},
-                Err(e) => {eprintln!("Error >> {}", e)}
-            }
-            match Achievements::read_data("raids") {
-                Ok(result) => {P_ACHIEVEMENTS_RAID = result},
-                Err(e) => {eprintln!("Error >> {}", e)}
-            }
-        }
-        P_DATA.name = new_data.name.clone();
-        P_DATA.level = new_data.level.clone();
-        P_DATA.class = new_data.class.clone();
-        P_DATA.server = new_data.server.clone();
-        P_DATA.datacenter = new_data.datacenter.clone();
-        P_DATA.achievements = new_data.achievements.clone();
-        //PMD
-        //println!("UPDATED DATA");
-        for id in 0..P_ACHIEVEMENTS_DUN.id.len() {
-            if P_DATA.achievements.contains(&P_ACHIEVEMENTS_DUN.id[id]) {
-                P_ACHIEVEMENTS_DUN.status[id] = true;
-            }
-        }
-        for id in 0..P_ACHIEVEMENTS_TRIAL.id.len() {
-            if P_DATA.achievements.contains(&P_ACHIEVEMENTS_TRIAL.id[id]) {
-               P_ACHIEVEMENTS_TRIAL.status[id] = true;
-            }
-        }
-        for id in 0..P_ACHIEVEMENTS_RAID.id.len() {
-            if P_DATA.achievements.contains(&P_ACHIEVEMENTS_RAID.id[id]) {
-               P_ACHIEVEMENTS_RAID.status[id] = true;
-            }
-        }
-    }
+#[derive(PartialEq, Props)]
+struct PureAchievement {
+    category: String,
+    name: Vec<String>,
+    id: Vec<i32>,
+    status: Vec<bool>
 }
 
-fn c_dungeon(cx: Scope) -> Element {
+fn component_achievements(cx: Scope<PureAchievement>) -> Element {
     let mut page = use_state(cx,|| 0);
-    unsafe {
-        cx.render(rsx!{
-            div {class:"table-container",
-            table {
-                tr{
-                    th{"Dungeon"}
-                    th{"Status"}
-                }
-                for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, P_ACHIEVEMENTS_DUN.name.len()) {
-                    tr{
-                        td{"{P_ACHIEVEMENTS_DUN.name[x]}"}
-                        td{class:"a_{P_ACHIEVEMENTS_DUN.status[x]}","{P_ACHIEVEMENTS_DUN.status[x]}"}
-                    }
-                }
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() > 0 {
-                        page -= 1
-                    }
-                },
-                "Previous"
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() < 1 {
-                        page += 1
-                    }
-                },
-                "Next"
-            }
-            }
-        })
+    let current_category = use_state(cx, || cx.props.category.clone());
+
+    if cx.props.category != *current_category.get() {
+        current_category.set(cx.props.category.clone());
+        page.set(0);
     }
-}
-fn c_trial(cx: Scope) -> Element {
-    let mut page = use_state(cx,|| 0);
-    unsafe {
-        cx.render(rsx!{
-            div {class:"table-container",
-            table {
+
+    cx.render(rsx!{
+        div {class:"table-container",
+        table {
+            tr{
+                th{"{cx.props.category}"}
+                th{"Status"}
+            }
+            for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, cx.props.name.len()) {
                 tr{
-                    th{"Trial"}
-                    th{"Status"}
+                    td{"{cx.props.name[x]}"}
+                    td{class:"a_{cx.props.status[x]}","{cx.props.status[x]}"}
                 }
-                for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, P_ACHIEVEMENTS_TRIAL.name.len()) {
-                    tr{
-                        td{"{P_ACHIEVEMENTS_TRIAL.name[x]}"}
-                        td{class:"a_{P_ACHIEVEMENTS_TRIAL.status[x]}","{P_ACHIEVEMENTS_TRIAL.status[x]}"}
-                    }
-                }   
             }
-            button {
-                onclick: move |_| {
-                    if *page.get() > 0 {
-                        page -= 1
-                    }
-                },
-                "Previous"
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() < 4 {
-                        page += 1
-                    }
-                },
-                "Next"
-            }
-            }
-        })
-    }
-}
-fn c_raid(cx: Scope) -> Element {
-    let mut page = use_state(cx,|| 0);
-    unsafe {
-        cx.render(rsx!{
-            div {class:"table-container",
-            table {
-                tr{
-                    th{"Raid"}
-                    th{"Status"}
+        }
+        button {
+            onclick: move |_| {
+                if *page.get() > 0 {
+                    page -= 1
                 }
-                for x in (*page.get()*7)..std::cmp::min(*page.get()*7 + 7, P_ACHIEVEMENTS_RAID.name.len()) {
-                    tr{
-                        td{"{P_ACHIEVEMENTS_RAID.name[x]}"}
-                        td{class:"a_{P_ACHIEVEMENTS_RAID.status[x]}","{P_ACHIEVEMENTS_RAID.status[x]}"}
-                    }
-                }   
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() > 0 {
-                        page -= 1
-                    }
-                },
-                "Previous"
-            }
-            button {
-                onclick: move |_| {
-                    if *page.get() < 2 {
-                        page += 1
-                    }
-                },
-                "Next"
-            }
-           }
-        })
-    }
+            },
+            "Previous"
+        }
+        button {
+            onclick: move |_| {
+                if (*page.get() + 1) * 7 < cx.props.name.len() {
+                    page += 1
+                }
+            },
+            "Next"
+        }
+        }
+    })
 }
 
 fn app(cx: Scope) -> Element {
     let tab_state = use_state(cx, || 0);
-    unsafe {
-        if *tab_state == 0 {
-            cx.render(rsx! {
-                style { include_str!("css/main.css") }
-                div { class: "container",
-                h1 {class:"title", "FFXIV - Raid Completion Tracker"}
 
-                    div { class: "cards",
-                    div {class:"card",
-                    h2 {class:"username", "{P_DATA.name}"}
-                        p {class:"level", "Lv. {P_DATA.level}"}
-                            p {class:"class", "{P_DATA.class}"}
-                    }
-                    div {class:"card",
-                    h2 {class:"username", "Datacenter"}
-                        p {class:"level", "{P_DATA.datacenter}"}
-                            p {class:"class", "{P_DATA.server}"}
-                    }
-                    }
+    let data_mutex = Arc::clone(&*PDM);
+    let p_data = data_mutex.player_data.lock().unwrap();
+    let achievements = data_mutex.player_achievements.lock().unwrap();
 
-                    div {class:"seperator"}
+    let tab_names: Vec<&str> = vec!["Dungeons", "Trials", "Raids"];
 
-                        div {class:"tabs",
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 0);
-                        }, "Dungeons"}
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 1);
-                        }, "Trials"}
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 2);
-                        }, "Raid"}
-                        }
+    cx.render(rsx! {
+        style { include_str!("css/main.css") }
+        div { class: "container",
+        h1 {class:"title", "FFXIV - Raid Completion Tracker"}
 
-                        c_dungeon{}
+            div { class: "cards",
+            div {class:"card",
+            h2 {class:"username", "{p_data.name}"}
+                p {class:"level", "Lv. {p_data.level}"}
+                    p {class:"class", "{p_data.class}"}
+            }
+            div {class:"card",
+            h2 {class:"username", "Datacenter"}
+                p {class:"level", "{p_data.datacenter}"}
+                    p {class:"class", "{p_data.server}"}
+            }
+            }
 
-                        button {
-                            onclick: |_| async move {
-                                println!("Quitting the application");
-                                std::process::exit(0);
-                            },
-                            "Exit"
-                        }
+            div {class:"seperator"}
+
+                div {class:"tabs",
+                div {class:"tab", onclick: move |_| {
+                    tab_state.modify(|_| 0);
+                }, "Dungeons"}
+                div {class:"tab", onclick: move |_| {
+                    tab_state.modify(|_| 1);
+                }, "Trials"}
+                div {class:"tab", onclick: move |_| {
+                    tab_state.modify(|_| 2);
+                }, "Raid"}
                 }
-            })
-        } else if *tab_state == 1 {
-            cx.render(rsx! {
-                style { include_str!("css/main.css") }
-                div { class: "container",
-                h1 {class:"title", "FFXIV - Raid Completion Tracker"}
 
-                    div { class: "cards",
-                    div {class:"card",
-                    h2 {class:"username", "{P_DATA.name}"}
-                        p {class:"level", "Lv. {P_DATA.level}"}
-                            p {class:"class", "{P_DATA.class}"}
-                    }
-                    div {class:"card",
-                    h2 {class:"username", "Datacenter"}
-                        p {class:"level", "{P_DATA.datacenter}"}
-                            p {class:"class", "{P_DATA.server}"}
-                    }
-                    }
-
-                    div {class:"seperator"}
-
-
-                        div {class:"tabs",
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 0);
-                        }, "Dungeons"}
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 1);
-                        }, "Trials"}
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 2);
-                        }, "Raid"}
-                        }
-
-                            c_trial{}
-
-                        button {
-                            onclick: |_| async move {
-                                println!("Quitting the application");
-                                std::process::exit(0);
-                            },
-                            "Exit"
-                        }
+                component_achievements {
+                    category: tab_names[*tab_state.get()].to_owned(),
+                    name: achievements[*tab_state.get()].name.clone(),
+                    id: achievements[*tab_state.get()].id.clone(),
+                    status: achievements[*tab_state.get()].status.clone(),
                 }
-            })
 
-        } else {
-            cx.render(rsx! {
-                style { include_str!("css/main.css") }
-                div { class: "container",
-                h1 {class:"title", "FFXIV - Raid Completion Tracker"}
-
-                    div { class: "cards",
-                    div {class:"card",
-                    h2 {class:"username", "{P_DATA.name}"}
-                        p {class:"level", "Lv. {P_DATA.level}"}
-                            p {class:"class", "{P_DATA.class}"}
-                    }
-                    div {class:"card",
-                    h2 {class:"username", "Datacenter"}
-                        p {class:"level", "{P_DATA.datacenter}"}
-                            p {class:"class", "{P_DATA.server}"}
-                    }
-                    }
-
-                    div {class:"seperator"}
-
-
-                        div {class:"tabs",
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 0);
-                        }, "Dungeons"}
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 1);
-                        }, "Trials"}
-                        div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 2);
-                        }, "Raid"}
-                        }
-
-                            c_raid{}
-
-                        button {
-                            onclick: |_| async move {
-                                println!("Quitting the application");
-                                std::process::exit(0);
-                            },
-                            "Exit"
-                        }
+                button {
+                    onclick: |_| async move {
+                        println!("Quitting the application");
+                        std::process::exit(0);
+                    },
+                    "Exit"
                 }
-            })
-
         }
-    }
+    }) 
 }

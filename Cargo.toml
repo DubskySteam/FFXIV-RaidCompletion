@@ -16,6 +16,7 @@ reqwest = {version = "0.11.18", features = ["json"]}
 serde = {version = "1.0.166", features = ["derive"]} 
 tokio = { version = "1.29.1", features = ["full"]}  
 winapi = {version = "0.3", features = ["wincon", "winuser"]}
+lazy_static = "1.4.0"
 
 [package.metadata.bundle]
 name = "FFXIV - Raid Completion"
