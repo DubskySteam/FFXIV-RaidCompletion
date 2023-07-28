@@ -1,16 +1,14 @@
-#![allow(non_camel_case_types)]
-#![allow(non_snake_case)]
 #![windows_subsystem = "windows"]
 
-mod player;
 mod fetch;
+mod playerdata;
 mod ui;
 mod content;
 use std::io::BufRead;
 use std::io;
 use std::fs::File;
 use std::ptr;
-use player::PlayerData;
+use playerdata::PlayerData;
 use winapi::um::wincon::GetConsoleWindow;
 use winapi::um::winuser::{ShowWindow, SW_HIDE};
 use regex::Regex;
@@ -32,14 +30,14 @@ async fn main() {
 
     //API Thread
     tokio::spawn(async move {
-        let mut P_ID: String = String::new();
+        let mut p_id: String = String::new();
 
         match read_id() {
-            Ok(id) => {P_ID = id;},
+            Ok(id) => {p_id = id;},
             Err(e) => {eprintln!("Couldn't parse config data {}", e)}
         }
         loop {
-            match fetch::fetch_data(&P_ID).await {
+            match fetch::fetch_data(&p_id).await {
                 Ok(reponse) => {
                     if tx.send(reponse).await.is_err() {
                         eprintln!("Error communicating with gui");

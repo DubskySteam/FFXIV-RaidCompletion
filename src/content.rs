@@ -7,6 +7,10 @@ pub struct Achievements {
 }
 
 impl Achievements {
+    pub fn new() -> Self {
+        Achievements { name: Vec::new(), id: Vec::new(), status: Vec::new() }
+    }
+
     pub fn read_data(filename: &str) -> io::Result<Self> {
         let file = File::open("data/".to_owned() + filename + ".data")?;
         let reader = io::BufReader::new(file);
