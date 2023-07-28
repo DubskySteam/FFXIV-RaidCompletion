@@ -1,34 +1,59 @@
 use dioxus::prelude::*;
 use dioxus_desktop::*;
-
+use std::sync::{Mutex, Arc};
 use crate::content::Achievements;
-use crate::player::PlayerData;
+use crate::PlayerData::PlayerData;
 
-static mut P_DATA: PlayerData = PlayerData {
-            name: String::new(),
-            level: 0,
-            class: String::new(), datacenter: String::new(),
-            server: String::new(),
-            achievements: Vec::new()
-        };
+struct PlayerDataMutex {
+    player_data: Mutex<PlayerData>,
+    player_achievements: Mutex<[Achievements; 3]>
+}
 
-static mut P_ACHIEVEMENTS_DUN: Achievements = Achievements {
-    name: Vec::new(),
-    id: Vec::new(),
-    status: Vec::new()
-};
-static mut P_ACHIEVEMENTS_TRIAL: Achievements = Achievements {
-    name: Vec::new(),
-    id: Vec::new(),
-    status: Vec::new()
-};
-static mut P_ACHIEVEMENTS_RAID: Achievements = Achievements {
-    name: Vec::new(),
-    id: Vec::new(),
-    status: Vec::new()
-};
+impl PlayerDataMutex {
+    fn new() -> Arc<Self> {
+        Arc::new(Self {
+            player_data: Mutex::new(PlayerData::new()),
+            player_achievements: Mutex::new([
+                Achievements::new(),
+                Achievements::new(),
+                Achievements::new()
+            ])
+        })
+    }
+
+    fn update(&self, new_data: &PlayerData) {
+        if self.player_achievements.lock().unwrap()[0].status.len() <= 1 {
+            match Achievements::read_data("dungeons") {
+                Ok(result) => self.player_achievements.lock().unwrap()[0] = result,
+                Err(e) => eprintln!("Error >> {}", e),
+            }
+            match Achievements::read_data("trials") {
+                Ok(result) => self.player_achievements.lock().unwrap()[1] = result,
+                Err(e) => eprintln!("Error >> {}", e),
+            }
+            match Achievements::read_data("raids") {
+                Ok(result) => self.player_achievements.lock().unwrap()[2] = result,
+                Err(e) => eprintln!("Error >> {}", e),
+            }
+        }
+        self.player_data.name = new_data.name.clone();
+        self.player_data.level = new_data.level;
+        self.player_data.class = new_data.class.clone();
+        self.player_data.server = new_data.server.clone();
+        self.player_data.datacenter = new_data.datacenter.clone();
+        self.player_data.achievements = new_data.achievements.clone();
+
+        update_status(&mut self.p_achievements_dun, &self.player_data);
+        update_status(&mut self.p_achievements_trial, &state.player_data);
+        update_status(&mut self.p_achievements_raid, &state.player_data);
+    }
+}
+
+static mut PDM: Arc<PlayerDataMutex> = PlayerDataMutex::new();
 
 pub fn create_ui() {
+    let mut pdm = PlayerDataMutex::new();
+
     dioxus_desktop::launch_cfg(
         app,
         Config::default().with_window(WindowBuilder::new()
@@ -37,50 +62,15 @@ pub fn create_ui() {
         );
 }
 
-pub fn update(new_data: &PlayerData) {
-    unsafe {
-        if P_ACHIEVEMENTS_DUN.status.len() <= 1 {
-            match Achievements::read_data("dungeons") {
-                Ok(result) => {P_ACHIEVEMENTS_DUN = result},
-                Err(e) => {eprintln!("Error >> {}", e)}
-            }
-            match Achievements::read_data("trials") {
-                Ok(result) => {P_ACHIEVEMENTS_TRIAL = result},
-                Err(e) => {eprintln!("Error >> {}", e)}
-            }
-            match Achievements::read_data("raids") {
-                Ok(result) => {P_ACHIEVEMENTS_RAID = result},
-                Err(e) => {eprintln!("Error >> {}", e)}
-            }
-        }
-        P_DATA.name = new_data.name.clone();
-        P_DATA.level = new_data.level.clone();
-        P_DATA.class = new_data.class.clone();
-        P_DATA.server = new_data.server.clone();
-        P_DATA.datacenter = new_data.datacenter.clone();
-        P_DATA.achievements = new_data.achievements.clone();
-        //PMD
-        //println!("UPDATED DATA");
-        for id in 0..P_ACHIEVEMENTS_DUN.id.len() {
-            if P_DATA.achievements.contains(&P_ACHIEVEMENTS_DUN.id[id]) {
-                P_ACHIEVEMENTS_DUN.status[id] = true;
-            }
-        }
-        for id in 0..P_ACHIEVEMENTS_TRIAL.id.len() {
-            if P_DATA.achievements.contains(&P_ACHIEVEMENTS_TRIAL.id[id]) {
-               P_ACHIEVEMENTS_TRIAL.status[id] = true;
-            }
-        }
-        for id in 0..P_ACHIEVEMENTS_RAID.id.len() {
-            if P_DATA.achievements.contains(&P_ACHIEVEMENTS_RAID.id[id]) {
-               P_ACHIEVEMENTS_RAID.status[id] = true;
-            }
+fn update_status(achievements: &mut Achievements, player_data: &PlayerData) {
+    for id in 0..achievements.id.len() {
+        if player_data.achievements.contains(&achievements.id[id]) {
+            achievements.status[id] = true;
         }
     }
 }
-
 fn c_dungeon(cx: Scope) -> Element {
-    let mut page = use_state(cx,|| 0);
+    let mut page = use_self(cx,|| 0);
     unsafe {
         cx.render(rsx!{
             div {class:"table-container",
@@ -117,7 +107,7 @@ fn c_dungeon(cx: Scope) -> Element {
     }
 }
 fn c_trial(cx: Scope) -> Element {
-    let mut page = use_state(cx,|| 0);
+    let mut page = use_self(cx,|| 0);
     unsafe {
         cx.render(rsx!{
             div {class:"table-container",
@@ -154,7 +144,7 @@ fn c_trial(cx: Scope) -> Element {
     }
 }
 fn c_raid(cx: Scope) -> Element {
-    let mut page = use_state(cx,|| 0);
+    let mut page = use_self(cx,|| 0);
     unsafe {
         cx.render(rsx!{
             div {class:"table-container",
@@ -192,9 +182,9 @@ fn c_raid(cx: Scope) -> Element {
 }
 
 fn app(cx: Scope) -> Element {
-    let tab_state = use_state(cx, || 0);
+    let tab_self = use_state(cx, || 0);
     unsafe {
-        if *tab_state == 0 {
+        if *tab_self == 0 {
             cx.render(rsx! {
                 style { include_str!("css/main.css") }
                 div { class: "container",
@@ -217,13 +207,13 @@ fn app(cx: Scope) -> Element {
 
                         div {class:"tabs",
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 0);
+                            tab_self.modify(|_| 0);
                         }, "Dungeons"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 1);
+                            tab_self.modify(|_| 1);
                         }, "Trials"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 2);
+                            tab_self.modify(|_| 2);
                         }, "Raid"}
                         }
 
@@ -238,7 +228,7 @@ fn app(cx: Scope) -> Element {
                         }
                 }
             })
-        } else if *tab_state == 1 {
+        } else if *tab_self == 1 {
             cx.render(rsx! {
                 style { include_str!("css/main.css") }
                 div { class: "container",
@@ -262,13 +252,13 @@ fn app(cx: Scope) -> Element {
 
                         div {class:"tabs",
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 0);
+                            tab_self.modify(|_| 0);
                         }, "Dungeons"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 1);
+                            tab_self.modify(|_| 1);
                         }, "Trials"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 2);
+                            tab_self.modify(|_| 2);
                         }, "Raid"}
                         }
 
@@ -308,13 +298,13 @@ fn app(cx: Scope) -> Element {
 
                         div {class:"tabs",
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 0);
+                            tab_self.modify(|_| 0);
                         }, "Dungeons"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 1);
+                            tab_self.modify(|_| 1);
                         }, "Trials"}
                         div {class:"tab", onclick: move |_| {
-                            tab_state.modify(|_| 2);
+                            tab_self.modify(|_| 2);
                         }, "Raid"}
                         }
 
