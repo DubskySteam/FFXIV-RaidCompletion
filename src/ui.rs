@@ -129,6 +129,8 @@ fn app(cx: Scope) -> Element {
     let p_data = data_mutex.player_data.lock().unwrap();
     let achievements = data_mutex.player_achievements.lock().unwrap();
 
+    let tab_names: Vec<&str> = vec!["Dungeons", "Trials", "Raids"];
+
     cx.render(rsx! {
         style { include_str!("css/main.css") }
         div { class: "container",
@@ -162,7 +164,7 @@ fn app(cx: Scope) -> Element {
                 }
 
                 component_achievements {
-                    category: "Dungeons".to_owned(),
+                    category: tab_names[*tab_state.get()].to_owned(),
                     name: achievements[*tab_state.get()].name.clone(),
                     id: achievements[*tab_state.get()].id.clone(),
                     status: achievements[*tab_state.get()].status.clone(),
