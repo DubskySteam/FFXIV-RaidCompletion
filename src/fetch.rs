@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use serde::Deserialize;
-use crate::player::PlayerData;
+use crate::playerdata::PlayerData;
 
 #[derive(Deserialize, Debug)]
 struct Player {
@@ -66,14 +66,14 @@ impl From<Box<dyn std::error::Error>> for ApiError {
 }
 
 pub async fn fetch_data(id: &str) -> Result<PlayerData, ApiError> {
-    //println!("STARTING TO FETCH");
+    println!("STARTING TO FETCH");
     let p_data = reqwest::get(format!("https://xivapi.com/character/{}?data=AC", id))
         .await
         .map_err(|err| ApiError::new(&format!("{}", err)))?
         .json::<Player>()
         .await
         .map_err(|err| ApiError::new(&format!("{}", err)))?;
-    //println!("DONE FETCHING");
+    println!("DONE FETCHING");
 
     let mut P_DATA: PlayerData = PlayerData::new();
     //println!("pdata:\n{:?}", p_data);

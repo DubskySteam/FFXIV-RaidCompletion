@@ -1,14 +1,14 @@
 #![windows_subsystem = "windows"]
 
-mod player;
 mod fetch;
+mod playerdata;
 mod ui;
 mod content;
 use std::io::BufRead;
 use std::io;
 use std::fs::File;
 use std::ptr;
-use player::PlayerData;
+use playerdata::PlayerData;
 use winapi::um::wincon::GetConsoleWindow;
 use winapi::um::winuser::{ShowWindow, SW_HIDE};
 use regex::Regex;
