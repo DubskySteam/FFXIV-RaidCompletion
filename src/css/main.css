@@ -1,74 +1,83 @@
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: #282c34;
-  font-family: 'Arial', sans-serif;
-  color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #282c34;
+    font-family: 'Arial', sans-serif;
+    color: #ffffff;
 }
 
 .container {
-  width: 100%;
-  text-align: center;
+    width: 100%;
+    text-align: center;
 }
 
 .title {
-  font-size: 30px;
-  margin-bottom: 20px;
-  color: #61dafb;
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #61dafb;
 }
 
 .cards {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
 }
 
 .card {
-  background: #20232a;
-  border-radius: 10px;
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  padding: 20px;
-  width: 250px;
-  margin-left: 10px;
-  margin-right: 10px;
-  text-align: center;
+    background: #20232a;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    padding: 20px;
+    width: 250px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
 }
 
 .username {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: #61dafb;
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #61dafb;
 }
 
 .level, .class {
-  font-size: 18px;
-  color: #ffffff;
+    font-size: 18px;
+    color: #ffffff;
 }
 
 .separator {
-  height: 1px;
-  background-color: #61dafb;
-  margin-bottom: 20px;
+    height: 1px;
+    background-color: #61dafb;
+    margin-bottom: 20px;
 }
 
 .tabs {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background: #20232a;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 }
 
 .tab {
-  color: #61dafb;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 10px;
+    width: 150px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #61dafb;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
 }
 
 .tab:hover {
-  background-color: #61dafb;
-  color: #20232a;
+    background-color: #61dafb;
+    color: #20232a;
 }
 
 .label_sep {
@@ -80,50 +89,50 @@ body {
 }
 
 .labels {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .label_true {
-  color: green;
-  font-size: 18px;
-  min-width: calc(50% - 10px);
-  text-align: center;
-  margin-bottom: 10px;
-  overflow-wrap: break-word;
+    color: green;
+    font-size: 18px;
+    min-width: calc(50% - 10px);
+    text-align: center;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
 }
 
 .label_false {
-  color: red;
-  font-size: 18px;
-  min-width: calc(50% - 10px);
-  text-align: center;
-  margin-bottom: 10px;
-  overflow-wrap: break-word;
+    color: red;
+    font-size: 18px;
+    min-width: calc(50% - 10px);
+    text-align: center;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
 }
 
 .table-container {
-  background: #20232a;
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px 0;
-  overflow: auto;
+    background: #20232a;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    overflow: auto;
 }
 
 table {
-  width: 100%;
-  background: #20232a;
-  border-collapse: collapse;
-  color: #ffffff;
-  text-align: left;
+    width: 100%;
+    background: #20232a;
+    border-collapse: collapse;
+    color: #ffffff;
+    text-align: left;
 }
 
 th, td {
-  padding: 8px;
-  background: #20232a;
-  font-size: 18px;
+    padding: 8px;
+    background: #20232a;
+    font-size: 18px;
 }
 
 .a_Finished {
@@ -135,48 +144,48 @@ th, td {
 }
 
 th {
-  background: #282c34;
-  color: #61dafb;
+    background: #282c34;
+    color: #61dafb;
 }
 
 tr:nth-child(even) {
-  background-color: #282c34;
+    background-color: #282c34;
 }
 
 button {
-  background-color: #282c34; 
-  border: none;
-  color: #61dafb;
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px 2px;
-  padding: 10px 24px;
-  text-decoration: none;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+    background-color: #282c34; 
+    border: none;
+    color: #61dafb;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    padding: 10px 24px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #61dafb;
-  color: #282c34;
+    background-color: #61dafb;
+    color: #282c34;
 }
 
 
 .button_special {
-  background-color: red; 
-  border: none;
-  color: black;
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px 2px;
-  padding: 10px 24px;
-  text-decoration: none;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+    background-color: red; 
+    border: none;
+    color: black;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    padding: 10px 24px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
 }
