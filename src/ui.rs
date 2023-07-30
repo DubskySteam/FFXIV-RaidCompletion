@@ -57,7 +57,7 @@ pub fn update(new_data: &PlayerData) {
 fn update_status(achievements: &mut Achievements, player_data: &PlayerData) {
     for id in 0..achievements.id.len() {
         if player_data.achievements.contains(&achievements.id[id]) {
-            achievements.status[id] = true;
+            achievements.status[id] = "Finished".to_owned();
         }
     }
 }
@@ -66,8 +66,9 @@ pub fn create_ui() {
     dioxus_desktop::launch_cfg(
         app,
         Config::default().with_window(WindowBuilder::new()
-                                      .with_resizable(true)
-                                      .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(1080, 820)))
+                                      .with_resizable(false)
+                                      .with_inner_size(dioxus_desktop::wry::application::dpi::LogicalSize::new(600, 820))
+                                      .with_title("FFXIV - Completion"))
         );
 }
 
@@ -76,7 +77,7 @@ struct PureAchievement {
     category: String,
     name: Vec<String>,
     id: Vec<i32>,
-    status: Vec<bool>
+    status: Vec<String>
 }
 
 fn component_achievements(cx: Scope<PureAchievement>) -> Element {
@@ -171,6 +172,7 @@ fn app(cx: Scope) -> Element {
                 }
 
                 button {
+                    class:"button_special",
                     onclick: |_| async move {
                         println!("Quitting the application");
                         std::process::exit(0);
