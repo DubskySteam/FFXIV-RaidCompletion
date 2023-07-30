@@ -1,7 +1,7 @@
 # FFXIV-RaidCompletion
 ##### A fast and lightweight tracker for dungeon, trial & raid achievements
 ##### Made & maintained in my free-time, therefore no guarantee for instant bug fixes, updates etc.
-![](https://img.shields.io/badge/Current%20Version-1.1.0-green?style=for-the-badge&logo=git)
+![](https://img.shields.io/badge/Current%20Version-1.2.0-green?style=for-the-badge&logo=git)
 ![](https://img.shields.io/badge/Game%20Version-6.4-blue?style=for-the-badge&logo=)
 ___
 [![](https://img.shields.io/badge/Download-Latest-blue?style=for-the-badge&logo=)](https://github.com/DubskySteam/FFXIV-RaidCompletion/releases/)

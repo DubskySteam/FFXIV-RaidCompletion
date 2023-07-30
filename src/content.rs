@@ -3,7 +3,7 @@ use std::{fs::File, io::{self, BufRead}};
 pub struct Achievements {
     pub name: Vec<String>,
     pub id: Vec<i32>,
-    pub status: Vec<bool>
+    pub status: Vec<String>
 }
 
 impl Achievements {
@@ -34,7 +34,7 @@ impl Achievements {
                     ))?;
             names.push(name);
             ids.push(id);
-            statuses.push(false);
+            statuses.push("Incomplete".to_owned());
         }
         Ok(Achievements { name: names, id: ids, status: statuses })
     }
