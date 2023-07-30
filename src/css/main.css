@@ -126,11 +126,11 @@ th, td {
   font-size: 18px;
 }
 
-.a_true {
+.a_Finished {
     color: green;
 }
 
-.a_false {
+.a_Incomplete {
     color: red;
 }
 

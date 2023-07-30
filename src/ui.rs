@@ -57,7 +57,7 @@ pub fn update(new_data: &PlayerData) {
 fn update_status(achievements: &mut Achievements, player_data: &PlayerData) {
     for id in 0..achievements.id.len() {
         if player_data.achievements.contains(&achievements.id[id]) {
-            achievements.status[id] = true;
+            achievements.status[id] = "Finished".to_owned();
         }
     }
 }
@@ -76,7 +76,7 @@ struct PureAchievement {
     category: String,
     name: Vec<String>,
     id: Vec<i32>,
-    status: Vec<bool>
+    status: Vec<String>
 }
 
 fn component_achievements(cx: Scope<PureAchievement>) -> Element {
