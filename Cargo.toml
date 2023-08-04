@@ -1,6 +1,6 @@
 [package]
 name = "ffxiv-raidcompletion"
-version = "1.1.0"
+version = "1.2.2"
 edition = "2021"
 description = """
 A fast & lightweight tool that allows you to track your endgame progress in Final Fantasy 14 Online
@@ -21,7 +21,7 @@ lazy_static = "1.4.0"
 [package.metadata.bundle]
 name = "FFXIV - Raid Completion"
 identifier = "dev.dubsky"
-version = "1.0.0"
+version = "1.2.2"
 copyright = "Copyright (c) DubskySteam 2023. All rights reserved."
 short_description = "FFXIV Achievement Tracker"
 long_description = """
