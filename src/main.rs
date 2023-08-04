@@ -21,7 +21,9 @@ use winapi::um::winuser::{ShowWindow, SW_HIDE};
 #[tokio::main]
 async fn main() {
 
-    windows_console_fix();
+    #[cfg(target_os = "windows")] {
+        windows_console_fix();
+    }
 
     //Channel for msg's between gui && api threads
     let (tx, mut rx) = mpsc::channel::<PlayerData>(100);
