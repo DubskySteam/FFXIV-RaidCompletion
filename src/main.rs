@@ -6,13 +6,14 @@ mod ui;
 mod content;
 use std::io::BufRead;
 use std::io;
-use std::ptr;
 use std::fs::File;
 use playerdata::PlayerData;
 use regex::Regex;
 use tokio::sync::mpsc;
 use tokio::time::{Duration, sleep};
 
+#[cfg(target_os = "windows")]
+use std::ptr;
 #[cfg(target_os = "windows")]
 use winapi::um::wincon::GetConsoleWindow;
 #[cfg(target_os = "windows")]
