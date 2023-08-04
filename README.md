@@ -4,9 +4,11 @@
 ![](https://img.shields.io/badge/Current%20Version-1.2.2-green?style=for-the-badge&logo=git)
 ![](https://img.shields.io/badge/Game%20Version-6.4-blue?style=for-the-badge&logo=)
 
-
 ![](https://img.shields.io/badge/Windows-1.2.2-green?style=for-the-badge&logo=windows)
 ![](https://img.shields.io/badge/Linux-1.2.2-green?style=for-the-badge&logo=linux)
+
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/dubskysteam/FFXIV-RaidCompletion/.github%2Fworkflows%2Frust.yml?style=for-the-badge)
+
 ___
 [![](https://img.shields.io/badge/Download-Latest-blue?style=for-the-badge&logo=)](https://github.com/DubskySteam/FFXIV-RaidCompletion/releases/)
 ## Features
