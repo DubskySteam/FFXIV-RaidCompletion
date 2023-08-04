@@ -7,22 +7,23 @@ mod content;
 use std::io::BufRead;
 use std::io;
 use std::fs::File;
-use std::ptr;
 use playerdata::PlayerData;
-use winapi::um::wincon::GetConsoleWindow;
-use winapi::um::winuser::{ShowWindow, SW_HIDE};
 use regex::Regex;
 use tokio::sync::mpsc;
 use tokio::time::{Duration, sleep};
 
+#[cfg(target_os = "windows")]
+use std::ptr;
+#[cfg(target_os = "windows")]
+use winapi::um::wincon::GetConsoleWindow;
+#[cfg(target_os = "windows")]
+use winapi::um::winuser::{ShowWindow, SW_HIDE};
+
 #[tokio::main]
 async fn main() {
 
-    let window = unsafe {GetConsoleWindow()};
-    if window != ptr::null_mut() {
-        unsafe {
-            ShowWindow(window, SW_HIDE);
-        }
+    #[cfg(target_os = "windows")] {
+        windows_console_fix();
     }
 
     //Channel for msg's between gui && api threads
@@ -67,6 +68,16 @@ async fn main() {
 
     //GUI terminate await
     let _ = update_task.await;
+}
+
+#[cfg(target_os = "windows")]
+fn windows_console_fix() {
+    let window = unsafe {GetConsoleWindow()};
+    if window != ptr::null_mut() {
+        unsafe {
+            ShowWindow(window, SW_HIDE);
+        }
+    }
 }
 
 fn read_id() -> io::Result<String> {
